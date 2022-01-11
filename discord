@@ -5,7 +5,25 @@ local RunService = game:GetService("RunService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local HttpService = game:GetService("HttpService")
+local pfp
+local user
+local tag
+local userinfo = {}
 
+pcall(function()
+	userinfo = HttpService:JSONDecode(readfile("discordlibinfo.txt"));
+end)
+
+pfp = userinfo["pfp"] or "https://www.roblox.com/headshot-thumbnail/image?userId=".. 2732733271 .."&width=420&height=420&format=png"
+user =  "Dev"
+tag = 0000
+
+local function SaveInfo()
+	userinfo["pfp"] = pfp
+	userinfo["user"] = user
+	userinfo["tag"] = tag
+	writefile("discordlibinfo.txt", HttpService:JSONEncode(userinfo));
+end
 
 local function MakeDraggable(topbarobject, object)
 	local Dragging = nil
@@ -844,7 +862,7 @@ function DiscordLib:Window(text)
 			pfp = tostring(AvatarTextbox.Text)
 			UserImage.Image = pfp 
 			UserPanelUserImage.Image = pfp
-			
+			SaveInfo()
 
 			AvatarChange:TweenSize(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .2, true)
 			TweenService:Create(
@@ -914,10 +932,10 @@ function DiscordLib:Window(text)
 		ResetBtn.TextSize = 13.000
 		
 		ResetBtn.MouseButton1Click:Connect(function()
-			pfp = nil
+			pfp = "https://www.roblox.com/headshot-thumbnail/image?userId=".. 2732733271 .."&width=420&height=420&format=png"
 			UserImage.Image = pfp 
 			UserPanelUserImage.Image = pfp
-			
+			SaveInfo()
 
 			AvatarChange:TweenSize(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .2, true)
 			TweenService:Create(
@@ -1337,8 +1355,8 @@ function DiscordLib:Window(text)
 		end)
 		
 		ChangeBtn.MouseButton1Click:Connect(function()
-			user = nil
-			tag = nil
+			user = UsernameTextbox.Text
+			tag = TagTextbox.Text
 			UserSettingsPadUser.Text = user
 			UserSettingsPadUser.Size = UDim2.new(0, UserSettingsPadUser.TextBounds.X + 2, 0, 19)
 			UserSettingsPadTag.Text = "#" .. tag
@@ -1347,7 +1365,7 @@ function DiscordLib:Window(text)
 			UserPanelUser.Size = UDim2.new(0, UserPanelUser.TextBounds.X + 2, 0, 19)
 			UserName.Text = user
 			UserTag.Text = "#" .. tag
-			
+			SaveInfo()
 
 			UserChange:TweenSize(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .2, true)
 			TweenService:Create(
